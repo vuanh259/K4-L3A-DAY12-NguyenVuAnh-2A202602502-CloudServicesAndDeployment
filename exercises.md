@@ -3,9 +3,9 @@
 > **Bài làm cá nhân.** Trả lời bằng lời của chính bạn, dựa trên những gì bạn
 > quan sát được khi chạy code — không sao chép đáp án của người khác.
 >
-> Bản nháp có hỗ trợ AI, dựa trên kết quả kiểm tra được lưu trong repository.
-> Học viên cần đọc, kiểm chứng và diễn đạt lại theo hiểu biết của bản thân trước khi nộp.
-> Những thí nghiệm chưa hoàn thành được ghi rõ, không coi là minh chứng đã đạt.
+> Nội dung được hỗ trợ biên soạn bằng AI, dựa trên các lần chạy thật của repository.
+> Học viên cần đọc hiểu và điều chỉnh cách diễn đạt theo hiểu biết của bản thân.
+> Phân biệt rõ kết quả đã quan sát với tình huống giả định dùng để giải thích.
 >
 > Họ và tên: Nguyễn Vũ Anh — Mã học viên: 2A202602502
 
@@ -17,11 +17,15 @@ Trong `Settings`, `agent_api_key` không có giá trị mặc định nên app c
 khi khởi động nếu thiếu biến môi trường. Hãy mô tả một tình huống cụ thể mà
 việc "chết sớm" này cứu bạn, so với việc để mặc định `"changeme"`.
 
-Khi tạo service cloud mới nhưng quên khai báo AGENT_API_KEY, ứng dụng dừng ở
-startup với lỗi validation. Điều này buộc người triển khai sửa cấu hình trước
-khi nhận request. Nếu mặc định là `changeme`, endpoint vẫn chạy và người biết
-khóa mẫu có thể gọi được. Test thiếu API key trong CP1 đã đạt; trong lifespan
-có gọi `get_settings()` để kiểm tra thực sự diễn ra lúc startup.
+Ví dụ khi chuyển ứng dụng từ laptop lên một service cloud mới, người triển khai
+quên tạo biến `AGENT_API_KEY`. Nếu dùng mặc định `changeme`, service vẫn chạy
+nhưng ai biết khóa mẫu cũng có thể gọi API. Với cấu hình hiện tại, ứng dụng báo
+lỗi validation và không nhận request cho tới khi có khóa hợp lệ. Lỗi cấu hình
+được phát hiện trước khi dịch vụ bị sử dụng trái phép.
+
+Đây là tình huống minh họa. Trong bài, test thiếu API key đã đạt; `lifespan`
+gọi `get_settings()` trước khi startup hoàn tất nên việc kiểm tra diễn ra ngay
+khi khởi động, không đợi tới request đầu tiên.
 
 ---
 
@@ -37,9 +41,15 @@ Dòng log thật từ service Python local dùng fake Redis, ngày 28/09/2026:
 {"user_id": "evidence-8bf83efb2c", "tokens_in": 3, "tokens_out": 42, "cost_usd": 2.565e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T08:44:10.276076+00:00"}
 ```
 
-Có thể lọc theo user và khoảng thời gian để truy vết một lượt hỏi; cũng có thể
-cộng `cost_usd` hoặc thống kê token để phát hiện mức dùng tăng bất thường.
-Một câu in “đã trả lời xong” không cung cấp các trường này cho máy tổng hợp.
+Hai việc có thể làm với log này:
+
+1. Lọc `user_id` và `timestamp` để tìm các lượt hỏi của một user trong một khoảng thời gian.
+2. Cộng `cost_usd`, thống kê `tokens_in` và `tokens_out` để theo dõi mức sử dụng.
+
+Chuỗi “đã trả lời xong” không chứa user, thời gian hay chi phí để máy xử lý.
+JSON còn giữ cấu trúc key/value rõ ràng, không cần tách một câu văn bằng tay.
+Log gốc: [ask-log.jsonl](screenshots/ask-log.jsonl). Chi phí này là số giả lập
+của mock LLM, không phải hóa đơn OpenAI.
 
 ---
 
@@ -63,7 +73,7 @@ Giải thích: phần dung lượng chênh lệch đó là những gì?
 Đo bằng `docker image inspect`: single-stage là 1.695.833.068 byte,
 multi-stage là 270.915.050 byte; bảng dùng MB = 1.000.000 byte. Giảm khoảng
 1424,92 MB, tương đương 84,02%. `docker images` làm tròn thành 1,7 GB và 271 MB.
-Output gốc kèm image ID nằm ở `screenshots/image-sizes.json`.
+Output gốc kèm image ID: [image-sizes.json](screenshots/image-sizes.json).
 
 Chênh lệch chủ yếu đến từ base Python đầy đủ có thêm công cụ build, header và
 thư viện hệ điều hành; bản slim lược bỏ nhiều thành phần đó. Multi-stage chỉ
@@ -80,14 +90,21 @@ Sửa một ký tự trong `app/main.py` rồi build lại. Với Dockerfile c�
 layer nào được dùng lại từ cache, layer nào phải chạy lại? Nếu bạn đặt
 `COPY . .` lên trước `RUN pip install` thì kết quả khác thế nào?
 
-Theo thứ tự Dockerfile, sửa `app/main.py` giữ được cache của bước copy
-requirements, pip install, tạo user và copy dependency từ builder. Layer
-`COPY app ./app` và các layer đứng sau bị xây dựng lại. Nếu copy toàn bộ code
-trước pip install thì sửa source sẽ làm mất cache của bước cài dependency.
-Đã chạy thí nghiệm thêm một comment vào bản sao `app/main.py`, rồi build lại.
-Log `screenshots/docker-cache.txt` xác nhận COPY requirements, pip install,
-tạo user và COPY dependency đều `CACHED`; COPY app và COPY utils chạy lại.
-Bản sao được dùng để giữ nguyên source chính trong khi kiểm tra cache.
+Đã thêm một comment vào bản sao `app/main.py` rồi build lại. Kết quả quan sát:
+
+| Bước | Kết quả |
+|---|---|
+| COPY requirements, pip install | Dùng lại cache |
+| Tạo user, COPY dependency từ builder | Dùng lại cache |
+| COPY app, COPY utils | Chạy lại |
+
+Docker dùng cache theo đầu vào và các layer trước đó. Đặt requirements trước
+source giúp phần cài thư viện không bị ảnh hưởng khi chỉ sửa code. Nếu đưa
+`COPY . .` lên trước pip install, thay đổi code sẽ làm mất cache ở bước COPY
+và kéo theo việc chạy lại pip install.
+
+Log thật: [docker-cache.txt](screenshots/docker-cache.txt). Thí nghiệm dùng
+bản sao source để không làm thay đổi chức năng ứng dụng đang nộp.
 
 ---
 
@@ -104,6 +121,9 @@ thoát container. Root trong container không tự động đồng nghĩa root t
 `USER 10001:10001` giảm quyền ngay ở bước thực thi mã trong container; nó là
 một lớp phòng vệ, không thay thế vá lỗi hoặc cấu hình cách ly đúng.
 
+Đã kiểm tra bằng `id -u` trong container và nhận `10001`:
+[docker-runtime.txt](screenshots/docker-runtime.txt).
+
 ---
 
 ### Câu 6 — Cửa sổ trượt (CP3)
@@ -115,9 +135,10 @@ con số đó.
 
 Với bộ đếm reset theo phút, có thể gửi 10 request ở giây 59 của phút trước
 và 10 request ở giây 00 của phút sau: tổng cộng 20 request trong khoảng hai giây.
-Cửa sổ trượt đếm lại 60 giây gần nhất nên các request ở phút trước vẫn nằm
-trong cửa sổ và request thứ 11 bị chặn. Test CP3 cũng xác nhận hết 60 giây
-thì quota được dùng lại.
+Cụ thể, gửi 10 lượt lúc 10:00:59 rồi thêm 10 lượt lúc 10:01:00 sẽ qua được bộ
+đếm theo phút. Cửa sổ trượt vẫn nhìn thấy 10 lượt vừa gửi ở phút trước nên sẽ
+chặn lượt tiếp theo. Request cũ rời cửa sổ khi đủ 60 giây, lúc đó quota tương
+ứng mới được dùng lại; không phải cứ sang phút mới là reset toàn bộ.
 
 ---
 
@@ -126,12 +147,18 @@ thì quota được dùng lại.
 Hai cơ chế này khác nhau ở điểm nào? Cho một tình huống mà rate limit cho qua
 nhưng cost guard phải chặn, và một tình huống ngược lại.
 
-Rate limit giới hạn tần suất, cost guard giới hạn số tiền theo tháng.
-Ví dụ user chỉ gửi một request trong phút nhưng đã tiêu 11 USD với ngân sách
-10 USD: rate limit cho qua, cost guard trả 402. Ngược lại, user gửi request
-thứ 11 trong 60 giây dù tổng chi phí mới 0,001 USD: rate limit trả 429.
-Test HTTP 402 và 429 đều đạt. Cost guard của lab kiểm tra rồi mới ghi chi phí,
-nên chưa bảo đảm trần tuyệt đối khi các request đồng thời hoặc một lượt tốn quá nhiều.
+Rate limit đếm số lượt gọi trong 60 giây; cost guard theo dõi tiền của từng
+user trong tháng UTC. Hai ví dụ minh họa:
+
+| Tình huống | Rate limit | Cost guard |
+|---|---|---|
+| Mới gọi 1 lượt/phút nhưng đã tiêu 11 USD, ngân sách 10 USD | Cho qua | Chặn, trả 402 |
+| Gọi lượt thứ 11 trong 60 giây, mới tiêu 0,001 USD | Chặn, trả 429 | Về ngân sách thì còn đủ |
+
+Trong endpoint, rate limit chạy trước nên ở tình huống thứ hai cost guard
+chưa được gọi. Test HTTP cho 402 và 429 đều đạt. Cost guard kiểm tra số đã chi
+trước LLM và ghi chi phí sau LLM; nó chưa giữ trước ngân sách cho request đồng
+thời, cũng chưa bảo đảm một lượt gọi mới không vượt số tiền còn lại.
 
 ---
 
@@ -148,7 +175,7 @@ có restart hay không phụ thuộc chính sách orchestrator; Docker HEALTHCHE
 đơn thuần chỉ đánh dấu unhealthy. Tách probe thì `/health` vẫn 200, `/ready`
 503 trong lúc Redis lỗi; test tình huống này đã đạt. Đã thử dừng Redis thật
 trong stack local: `/health` trả 200 và `/ready` trả 503 với `redis: false`,
-rồi khởi động lại Redis. Output nằm ở `screenshots/dependency-failure.json`.
+rồi khởi động lại Redis. Output: [dependency-failure.json](screenshots/dependency-failure.json).
 
 ---
 
@@ -158,13 +185,24 @@ Chạy `docker compose up --scale agent=3` rồi gọi `/ask` nhiều lần vớ
 `X-User-Id`. Quan sát `history_length` trong response. Nếu lịch sử được lưu
 trong một dict Python thay vì Redis, bạn sẽ thấy con số đó thay đổi thế nào?
 
-Đã chạy ba container bằng `docker compose -p day12-scale -f docker-compose.scale.yml
-up -d --no-build --scale agent=3 agent`. Gửi HTTP trực tiếp lần lượt tới agent
-1, 2, 3, 1, 2, 3 với cùng user ID, quan sát history_length là 0, 2, 4, 6, 8, 10.
-Kết quả gốc nằm trong `screenshots/scale-results.json`. Phép thử này không dùng
-Nginx: gọi từng container giúp biết chắc request đã đi qua ba process khác nhau.
-Nếu dùng dict riêng, ba lượt đầu sẽ đều thấy 0 và các lượt sau chỉ thấy lịch sử
-của từng instance, thay vì lịch sử chung tăng liên tục.
+Đã chạy ba container bằng lệnh:
+
+```powershell
+docker compose -p day12-scale -f docker-compose.scale.yml up -d --no-build --scale agent=3 agent
+```
+
+Gửi HTTP trực tiếp với cùng user ID cho kết quả:
+
+| Container nhận request | 1 | 2 | 3 | 1 | 2 | 3 |
+|---|---|---|---|---|---|---|
+| `history_length` | 0 | 2 | 4 | 6 | 8 | 10 |
+
+Mỗi lượt hỏi thêm hai message: user và assistant. Instance sau thấy được dữ
+liệu instance trước ghi vì cùng truy cập Redis. Nếu dùng dict riêng và ba
+instance ban đầu đều rỗng, chuỗi trên sẽ là 0, 0, 0, 2, 2, 2.
+
+Kết quả thật: [scale-results.json](screenshots/scale-results.json). Phép thử gọi
+từng container trực tiếp, không đi qua Nginx, để xác định instance nhận request.
 
 ---
 
@@ -174,13 +212,16 @@ Ghi lại **một** lỗi bạn gặp khi deploy lên cloud (build fail, health 
 timeout, sai REDIS_URL, app không đọc `$PORT`...): thông báo lỗi là gì, bạn
 tìm ra nguyên nhân bằng cách nào, và sửa ra sao?
 
-Deploy Render đã thành công; test CP5 đạt 9/9 và API HTTPS có Redis hoạt động.
-Trong lần triển khai này chưa ghi nhận lỗi build hoặc runtime trên Render,
-nên không bịa một lỗi cloud để điền câu trả lời.
-Lỗi môi trường đã gặp là Docker báo không tìm thấy named pipe `docker_engine`;
-nguyên nhân Docker Desktop chưa chạy. Sau khi khởi động Docker Desktop và cấp
-quyền truy cập Engine, `docker info` trả phiên bản 29.8.0. Đây là lỗi local,
-không thay thế yêu cầu phản ánh một lỗi deploy cloud. Một lỗi khi kiểm tra URL
-từ môi trường công cụ là WinError 10061 ở kết nối proxy của sandbox; chạy lại
-với quyền truy cập mạng được cấp thì các endpoint trả 200/401 đúng kỳ vọng,
-cho thấy lỗi đó thuộc môi trường kiểm thử chứ không phải service Render.
+Trong lần triển khai này chưa ghi nhận lỗi build/runtime trên Render. Vì vậy,
+chưa có một lỗi cloud đúng nghĩa để báo cáo theo câu hỏi. Sự cố thực tế gần
+nhất xảy ra khi kiểm tra URL cloud từ môi trường công cụ:
+
+- **Thông báo:** `WinError 10061` khi client HTTP kết nối qua proxy của sandbox.
+- **Cách xác định:** traceback nằm ở bước kết nối proxy, chưa nhận được HTTP
+  response từ API; chạy lại với quyền truy cập mạng được cấp thì endpoint hoạt động.
+- **Cách xử lý:** dùng môi trường kiểm thử có quyền mạng phù hợp, giữ nguyên
+  cấu hình bảo vệ API và không sửa service để né lỗi ở phía máy kiểm thử.
+- **Kết quả:** `/health` và `/ready` trả 200, `/ask` thiếu key trả 401; CP5 đạt 9/9.
+
+Đây là lỗi môi trường kiểm tra deployment, không phải lỗi bên trong Render.
+Kết quả cloud được lưu tại [cloud-probes.json](screenshots/cloud-probes.json).
