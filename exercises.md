@@ -3,10 +3,11 @@
 > **Bài làm cá nhân.** Trả lời bằng lời của chính bạn, dựa trên những gì bạn
 > quan sát được khi chạy code — không sao chép đáp án của người khác.
 >
-> Cách trả lời: thay dòng `> *Câu trả lời của bạn*` bằng câu trả lời.
-> `grade.py` đếm số câu đã trả lời (15 điểm cho 10 câu).
+> Bản nháp có hỗ trợ AI, dựa trên kết quả kiểm tra được lưu trong repository.
+> Học viên cần đọc, kiểm chứng và diễn đạt lại theo hiểu biết của bản thân trước khi nộp.
+> Những thí nghiệm chưa hoàn thành được ghi rõ, không coi là minh chứng đã đạt.
 >
-> Họ và tên: ..........................  Mã học viên: ..........................
+> Họ và tên: Nguyễn Vũ Anh — Mã học viên: 2A202602502
 
 ---
 
@@ -16,7 +17,11 @@ Trong `Settings`, `agent_api_key` không có giá trị mặc định nên app c
 khi khởi động nếu thiếu biến môi trường. Hãy mô tả một tình huống cụ thể mà
 việc "chết sớm" này cứu bạn, so với việc để mặc định `"changeme"`.
 
-> *Câu trả lời của bạn*
+Khi tạo service cloud mới nhưng quên khai báo AGENT_API_KEY, ứng dụng dừng ở
+startup với lỗi validation. Điều này buộc người triển khai sửa cấu hình trước
+khi nhận request. Nếu mặc định là `changeme`, endpoint vẫn chạy và người biết
+khóa mẫu có thể gọi được. Test thiếu API key trong CP1 đã đạt; trong lifespan
+có gọi `get_settings()` để kiểm tra thực sự diễn ra lúc startup.
 
 ---
 
@@ -26,7 +31,15 @@ Chạy service và gọi `/ask` vài lần. Dán một dòng log JSON bạn thu 
 nêu **hai** việc bạn làm được với dòng log đó mà `print("đã trả lời xong")`
 không làm được.
 
-> *Câu trả lời của bạn*
+Dòng log thật từ service Python local dùng fake Redis, ngày 28/09/2026:
+
+```json
+{"user_id": "evidence-8bf83efb2c", "tokens_in": 3, "tokens_out": 42, "cost_usd": 2.565e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T08:44:10.276076+00:00"}
+```
+
+Có thể lọc theo user và khoảng thời gian để truy vết một lượt hỏi; cũng có thể
+cộng `cost_usd` hoặc thống kê token để phát hiện mức dùng tăng bất thường.
+Một câu in “đã trả lời xong” không cung cấp các trường này cho máy tổng hợp.
 
 ---
 
@@ -42,12 +55,16 @@ docker images | grep agent
 
 | Bản | Dung lượng |
 |-----|-----------|
-| 1 stage (bản đầu) | ... MB |
-| Multi-stage | ... MB |
+| 1 stage (bản đối chiếu `Dockerfile.single`) | Chưa đo xong |
+| Multi-stage | Chưa đo xong |
 
 Giải thích: phần dung lượng chênh lệch đó là những gì?
 
-> *Câu trả lời của bạn*
+Đang chờ build Docker hoàn tất; chưa có số đo để kết luận mức giảm thực tế.
+`Dockerfile.single` dùng Python bản đầy đủ và chạy root để đối chiếu, không dùng
+để deploy. Bản chính dùng slim và chỉ copy dependency đã cài cùng source cần chạy.
+Chênh lệch dự kiến chủ yếu do base image đầy đủ có thêm công cụ và thư viện hệ
+điều hành. Multi-stage tự nó không bảo đảm image nhỏ nếu vẫn copy toàn bộ builder.
 
 ---
 
@@ -57,7 +74,12 @@ Sửa một ký tự trong `app/main.py` rồi build lại. Với Dockerfile c�
 layer nào được dùng lại từ cache, layer nào phải chạy lại? Nếu bạn đặt
 `COPY . .` lên trước `RUN pip install` thì kết quả khác thế nào?
 
-> *Câu trả lời của bạn*
+Theo thứ tự Dockerfile, sửa `app/main.py` giữ được cache của bước copy
+requirements, pip install, tạo user và copy dependency từ builder. Layer
+`COPY app ./app` và các layer đứng sau bị xây dựng lại. Nếu copy toàn bộ code
+trước pip install thì sửa source sẽ làm mất cache của bước cài dependency.
+Đây là phân tích Dockerfile; thí nghiệm sửa một ký tự và build lại còn chờ
+build lần đầu hoàn tất để xác nhận bằng dòng `CACHED` trong output.
 
 ---
 
@@ -67,7 +89,12 @@ Container mặc định chạy bằng root. Mô tả chuỗi sự kiện dẫn t
 trong code Python của bạn" tới "kẻ tấn công có quyền cao trên máy host", và
 lệnh `USER` cắt đứt chuỗi đó ở chỗ nào.
 
-> *Câu trả lời của bạn*
+Ví dụ một lỗi cho phép thực thi mã từ input làm kẻ tấn công chạy lệnh dưới
+quyền của process Python. Nếu process là root trong container, họ có thêm
+khả năng sửa file và khai thác cấu hình mount/capability hoặc lỗ hổng kernel để
+thoát container. Root trong container không tự động đồng nghĩa root trên host.
+`USER 10001:10001` giảm quyền ngay ở bước thực thi mã trong container; nó là
+một lớp phòng vệ, không thay thế vá lỗi hoặc cấu hình cách ly đúng.
 
 ---
 
@@ -78,7 +105,11 @@ phút đồng hồ (reset lúc giây 00), một người dùng có thể gửi t
 request trong 2 giây liên tiếp khi hạn mức là 10/phút? Giải thích cách đạt được
 con số đó.
 
-> *Câu trả lời của bạn*
+Với bộ đếm reset theo phút, có thể gửi 10 request ở giây 59 của phút trước
+và 10 request ở giây 00 của phút sau: tổng cộng 20 request trong khoảng hai giây.
+Cửa sổ trượt đếm lại 60 giây gần nhất nên các request ở phút trước vẫn nằm
+trong cửa sổ và request thứ 11 bị chặn. Test CP3 cũng xác nhận hết 60 giây
+thì quota được dùng lại.
 
 ---
 
@@ -87,7 +118,12 @@ con số đó.
 Hai cơ chế này khác nhau ở điểm nào? Cho một tình huống mà rate limit cho qua
 nhưng cost guard phải chặn, và một tình huống ngược lại.
 
-> *Câu trả lời của bạn*
+Rate limit giới hạn tần suất, cost guard giới hạn số tiền theo tháng.
+Ví dụ user chỉ gửi một request trong phút nhưng đã tiêu 11 USD với ngân sách
+10 USD: rate limit cho qua, cost guard trả 402. Ngược lại, user gửi request
+thứ 11 trong 60 giây dù tổng chi phí mới 0,001 USD: rate limit trả 429.
+Test HTTP 402 và 429 đều đạt. Cost guard của lab kiểm tra rồi mới ghi chi phí,
+nên chưa bảo đảm trần tuyệt đối khi các request đồng thời hoặc một lượt tốn quá nhiều.
 
 ---
 
@@ -96,7 +132,13 @@ nhưng cost guard phải chặn, và một tình huống ngược lại.
 Nếu gộp hai endpoint làm một và cho nó kiểm tra Redis, chuyện gì xảy ra với cụm
 3 container khi Redis mất kết nối 30 giây? Trả lời theo đúng thứ tự sự kiện.
 
-> *Câu trả lời của bạn*
+Redis mất kết nối, probe chung của cả ba container bắt đầu trả lỗi. Load
+balancer có thể ngừng gửi traffic; nếu orchestrator dùng probe đó làm liveness
+và đủ số lần lỗi, nó có thể restart cả ba container. Restart API không sửa được
+Redis, nên các container mới tiếp tục lỗi và có thể tạo vòng restart. Thực tế
+có restart hay không phụ thuộc chính sách orchestrator; Docker HEALTHCHECK
+đơn thuần chỉ đánh dấu unhealthy. Tách probe thì `/health` vẫn 200, `/ready`
+503 trong lúc Redis lỗi; test tình huống này đã đạt.
 
 ---
 
@@ -106,7 +148,13 @@ Chạy `docker compose up --scale agent=3` rồi gọi `/ask` nhiều lần vớ
 `X-User-Id`. Quan sát `history_length` trong response. Nếu lịch sử được lưu
 trong một dict Python thay vì Redis, bạn sẽ thấy con số đó thay đổi thế nào?
 
-> *Câu trả lời của bạn*
+Chạy HTTP trên một process với fake Redis đã quan sát history_length lần lượt
+0, 2, 4, ..., 18; mỗi câu hỏi thêm hai message. Test hai ConversationStore
+dùng cùng Redis giả cũng xác nhận đọc được dữ liệu của nhau. Chưa coi hai phép
+thử này là bằng chứng ba container: thí nghiệm đó còn chờ Docker tải image.
+Đã chuẩn bị `docker-compose.scale.yml` để ba agent dùng Redis chung và Nginx
+ở cổng 8080. Nếu dùng dict riêng, request tới instance khác có thể thấy 0 hoặc
+lịch sử ngắn hơn, khiến chuỗi history_length bị ngắt thay vì tăng liên tục.
 
 ---
 
@@ -116,4 +164,9 @@ Ghi lại **một** lỗi bạn gặp khi deploy lên cloud (build fail, health 
 timeout, sai REDIS_URL, app không đọc `$PORT`...): thông báo lỗi là gì, bạn
 tìm ra nguyên nhân bằng cách nào, và sửa ra sao?
 
-> *Câu trả lời của bạn*
+Chưa có deploy cloud hoàn tất nên chưa có lỗi cloud thực tế để mô tả.
+Lỗi môi trường đã gặp là Docker báo không tìm thấy named pipe `docker_engine`;
+nguyên nhân Docker Desktop chưa chạy. Sau khi khởi động Docker Desktop và cấp
+quyền truy cập Engine, `docker info` trả phiên bản 29.8.0. Đây là lỗi local,
+không thay thế yêu cầu phản ánh một lỗi deploy cloud. Phương án đang chuẩn bị
+là Render Free; sẽ bổ sung quan sát cloud sau khi đăng nhập và deploy thật.

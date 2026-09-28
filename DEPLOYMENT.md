@@ -1,101 +1,74 @@
-# Thông Tin Deploy — Checkpoint 5
+# Thông tin triển khai — CP5
 
-> Điền file này sau khi deploy xong. `pytest tests/test_cp5.py` đọc file này
-> để tìm địa chỉ service của bạn và gọi thử.
->
-> **Chỉ ghi TÊN biến môi trường, tuyệt đối không dán giá trị API key vào đây.**
-> Repo này công khai — dán khóa vào là mất khóa.
-
-## Thông Tin Học Viên
+## Học viên
 
 | Mục | Nội dung |
-|-----|----------|
-| Họ và tên | (điền họ tên) |
-| Mã học viên | (điền mã học viên) |
-| Repo | (điền link repo K4-L3A-DAY12-HoVaTen-MSSV-CloudServicesAndDeployment) |
+|---|---|
+| Họ và tên | Nguyễn Vũ Anh |
+| Mã học viên | 2A202602502 |
+| Repo | https://github.com/vuanh259/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment |
 
 ## Service
 
 | Mục | Nội dung |
-|-----|----------|
-| Public URL | https://TODO-thay-bang-url-that.up.railway.app |
-| Platform | Railway / Render / Cloud Run — (điền platform bạn dùng) |
-| Ngày deploy | (điền ngày) |
+|---|---|
+| Platform | Render — Web Service Free và Key Value Free |
+| Public URL | Chưa được cấp; đang chờ tạo Blueprint và deploy thành công |
+| Ngày chuẩn bị | 28/09/2026 |
+| Khu vực | Singapore cho cả API và Key Value |
+| Cấu hình | `render.yaml`, nhánh `main` |
+| Trạng thái | Đã đăng nhập Render; chưa xác nhận service Live |
 
-## Biến Môi Trường Đã Set Trên Cloud
+## Biến môi trường
 
-Ghi tên biến và **nguồn giá trị**, không ghi giá trị:
+Đây là cấu hình trong Blueprint, chưa phải xác nhận đã được áp dụng trên cloud.
 
-| Biến | Đã set | Ghi chú |
-|------|--------|---------|
-| `PORT` | ✅ | platform tự gán |
-| `AGENT_API_KEY` | ✅ | đặt trong dashboard, không nằm trong repo |
-| `REDIS_URL` | ✅ | (điền: Redis add-on của platform / Upstash / ...) |
-| `RATE_LIMIT_PER_MINUTE` | ✅ | 10 |
-| `MONTHLY_BUDGET_USD` | ✅ | 10.0 |
-| `LOG_LEVEL` | ✅ | INFO |
+| Biến | Nguồn |
+|---|---|
+| `PORT` | Render tự cấp |
+| `AGENT_API_KEY` | Render tự sinh bằng `generateValue: true` |
+| `REDIS_URL` | `connectionString` của Key Value cùng Blueprint |
+| `RATE_LIMIT_PER_MINUTE` | Blueprint: 10 |
+| `MONTHLY_BUDGET_USD` | Blueprint: 10.0 |
+| `LOG_LEVEL` | Blueprint: INFO |
 
-## Lệnh Kiểm Tra
+`.env` chỉ dùng trên máy và đã bị loại khỏi Git/build context. `DEPLOY_API_KEY`
+trong `.env` dùng riêng cho phép thử cloud có xác thực, không phải token quản trị Render.
 
-Thay `<URL>` bằng Public URL ở trên:
+## Kết quả thực tế hiện có
 
-```bash
-# 1. Liveness — mong đợi 200 {"status":"ok"}
-curl -i <URL>/health
+Ngày 28/09/2026, API Python chạy trực tiếp tại `http://127.0.0.1:8001`, dùng
+`fake://`, cho kết quả:
 
-# 2. Readiness — mong đợi 200 {"status":"ready"} (đã nối được Redis)
-curl -i <URL>/ready
+| Kiểm tra | Kết quả |
+|---|---|
+| `/health` | 200, status ok |
+| `/ready` | 200, redis true trên fake Redis |
+| `/ask` thiếu hoặc sai key | 401 |
+| `/ask` đúng key, 10 lượt đầu | 200 |
+| Lượt 11–12 trong cửa sổ | 429 |
+| History trước mỗi lượt thành công | 0, 2, 4, ..., 18 |
 
-# 3. Không có API key — mong đợi 401
-curl -i -X POST <URL>/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question":"Hello"}'
+Dữ liệu gốc: [local-python-probes.json](screenshots/local-python-probes.json).
+Log thật: [ask-log.jsonl](screenshots/ask-log.jsonl).
+Đây chưa phải kết quả Docker hay cloud, chưa đủ chứng minh CP5.
 
-# 4. Có API key — mong đợi 200 kèm câu trả lời
-curl -i -X POST <URL>/ask \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: $AGENT_API_KEY" \
-  -H "X-User-Id: sv-test" \
-  -d '{"question":"Deploy là gì?"}'
+## Docker và minh chứng còn chờ
 
-# 5. Rate limit — gọi 15 lần, những lần cuối phải trả 429
-for i in $(seq 1 15); do
-  curl -s -o /dev/null -w "%{http_code} " -X POST <URL>/ask \
-    -H "Content-Type: application/json" \
-    -H "X-API-Key: $AGENT_API_KEY" \
-    -H "X-User-Id: sv-test" \
-    -d '{"question":"test"}'
-done; echo
-```
+Docker Engine đã chạy, nhưng việc tải image từ Docker Hub gặp `unexpected EOF`
+và lỗi lấy OAuth token. Build image, số đo dung lượng, ba instance và ảnh chụp
+Docker vẫn đang chờ kiểm tra thực tế. Không bật LOCAL_FALLBACK vì stack Docker
+chưa được xác nhận chạy thành công.
 
-## Kết Quả Chạy Thật
+Ảnh dashboard và hai endpoint sẽ được lưu trong `screenshots/` sau khi deploy.
+Hiện chưa có ảnh minh chứng cloud; không dùng ảnh tạo giả để thay thế.
 
-Dán output của các lệnh trên vào đây:
+## Cách triển khai và xác minh
 
-```
-(điền output)
-```
+Làm theo [DEPLOY_RENDER_FREE.md](DEPLOY_RENDER_FREE.md). Sau khi có URL thật,
+cập nhật bảng Service, chạy `scripts/check_service.py` với URL đó, rồi chạy
+`python -m pytest tests/test_cp5.py -v` và lưu kết quả.
 
-## Ảnh Chụp Màn Hình
-
-Đặt ảnh trong thư mục `screenshots/`:
-
-- `screenshots/dashboard.png` — trang quản lý service trên platform
-- `screenshots/health.png` — kết quả gọi `/health` từ trình duyệt hoặc curl
-
----
-
-## Nếu Dùng Phương Án Dự Phòng
-
-Không đăng ký được tài khoản cloud? Vẫn nộp được bài, nhưng CP5 tối đa 60% điểm:
-
-1. Đặt `LOCAL_FALLBACK=true` trong `.env`
-2. Chạy `docker compose up -d` rồi kiểm tra `docker compose ps`
-3. Chụp màn hình vào `screenshots/`
-4. Chạy `pytest tests/test_cp5.py -v` — bộ test sẽ tự chuyển sang kiểm tra
-   `http://localhost:8000`
-5. Ghi rõ lý do không deploy được vào phần dưới đây:
-
-```
-(điền lý do nếu dùng phương án dự phòng, ngược lại xóa mục này)
-```
+Render Free có thể ngủ khi không có traffic; Key Value Free mất dữ liệu khi
+restart. Chỉ dùng cấu hình miễn phí này cho lab, không coi nó là sổ ngân sách
+bền vững cho dịch vụ LLM có tính tiền.
