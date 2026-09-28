@@ -60,7 +60,7 @@ Build cả hai phiên bản và ghi lại số đo thật:
 ```bash
 docker build -f Dockerfile.single -t agent:single .
 docker build -t day12-agent:prod .
-docker images | grep agent
+docker image inspect agent:single day12-agent:prod --format '{{.RepoTags}} {{.Size}} bytes'
 ```
 
 | Bản | Dung lượng |

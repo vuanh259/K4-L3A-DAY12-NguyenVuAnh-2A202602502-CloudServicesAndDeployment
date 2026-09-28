@@ -155,7 +155,7 @@ chứng minh được khả năng chia sẻ state giữa các container.
 | Dữ liệu | Kiểu Redis | Ví dụ key | Cách giới hạn |
 |---|---|---|---|
 | Lịch sử | List chứa message JSON | `history:sv01` | LTRIM 20 message, TTL 7 ngày |
-| Lượt gọi | Sorted Set | `ratelimit:sv01` | Cửa sổ 60 giây, TTL 60 giây |
+| Lượt gọi | Sorted Set | `ratelimit:sv01` | Cửa sổ 60 giây; TTL 60 giây được gia hạn mỗi lần ghi nhận request hợp lệ |
 | Chi phí | Chuỗi số, tăng bằng INCRBYFLOAT | `cost:sv01:2026-09` | Key theo tháng, TTL 40 ngày từ lần ghi gần nhất |
 
 `RPUSH` thêm ở cuối, `LRANGE` đọc từ cũ tới mới. Sau khi thêm message,
