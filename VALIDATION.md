@@ -19,7 +19,7 @@ Xem `screenshots/local-python-probes.json` và `screenshots/ask-log.jsonl`.
 
 - Hai test Docker build/kích thước: đang bị chặn bởi tải image chậm/lỗi EOF.
 - Stack Docker thực tế, thí nghiệm scale ba container, cache và kích thước hai image.
-- Public HTTPS trên Render, ảnh dashboard và probes cloud.
+- Ảnh dashboard và probes cloud (HTTP cloud đã kiểm tra thành công, xem bên dưới).
 - Câu phản ánh 3, 4, 9, 10 còn thiếu thí nghiệm tương ứng; đã ghi rõ trong bản nháp.
 - Bonus CI/CD chưa thực hiện.
 
@@ -33,3 +33,13 @@ Không dùng kết quả này để khẳng định bài đã xong hoặc đạt
 
 Cần chạy lại `pytest tests/ -v` và `python grade.py` không loại Docker sau khi
 Docker và cloud sẵn sàng, rồi cập nhật tài liệu này bằng kết quả cuối.
+
+## Cloud đã xác nhận sau khi có URL
+
+URL: https://day12-agent-nguyenvuanh.onrender.com
+
+`pytest tests/test_cp5.py -v -p no:cacheprovider`: **9 passed, 4 skipped**.
+Bốn test local fallback không áp dụng. Test `/ask` có API key thật đã đạt.
+Script HTTP bổ sung cũng xác nhận health/ready 200, thiếu/sai key 401,
+10 lượt hỏi hợp lệ trả 200 với history 0, 2, ..., 18, và lượt 11–12 trả 429.
+Output thật lưu tại `screenshots/cloud-probes.json`.

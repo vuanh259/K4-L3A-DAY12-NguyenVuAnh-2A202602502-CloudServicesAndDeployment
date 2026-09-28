@@ -164,9 +164,13 @@ Ghi lại **một** lỗi bạn gặp khi deploy lên cloud (build fail, health 
 timeout, sai REDIS_URL, app không đọc `$PORT`...): thông báo lỗi là gì, bạn
 tìm ra nguyên nhân bằng cách nào, và sửa ra sao?
 
-Chưa có deploy cloud hoàn tất nên chưa có lỗi cloud thực tế để mô tả.
+Deploy Render đã thành công; test CP5 đạt 9/9 và API HTTPS có Redis hoạt động.
+Trong lần triển khai này chưa ghi nhận lỗi build hoặc runtime trên Render,
+nên không bịa một lỗi cloud để điền câu trả lời.
 Lỗi môi trường đã gặp là Docker báo không tìm thấy named pipe `docker_engine`;
 nguyên nhân Docker Desktop chưa chạy. Sau khi khởi động Docker Desktop và cấp
 quyền truy cập Engine, `docker info` trả phiên bản 29.8.0. Đây là lỗi local,
-không thay thế yêu cầu phản ánh một lỗi deploy cloud. Phương án đang chuẩn bị
-là Render Free; sẽ bổ sung quan sát cloud sau khi đăng nhập và deploy thật.
+không thay thế yêu cầu phản ánh một lỗi deploy cloud. Một lỗi khi kiểm tra URL
+từ môi trường công cụ là WinError 10061 ở kết nối proxy của sandbox; chạy lại
+với quyền truy cập mạng được cấp thì các endpoint trả 200/401 đúng kỳ vọng,
+cho thấy lỗi đó thuộc môi trường kiểm thử chứ không phải service Render.
