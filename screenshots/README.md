@@ -11,7 +11,8 @@
 - `image-sizes.json`: số byte và image ID của hai image đã build thật.
 - `shutdown-results.json`: dừng container an toàn, exit code và log kết thúc.
 - `dependency-failure.json`: health/readiness khi Redis thật bị dừng tạm thời.
-- `pytest-results.txt`, `grade-summary.txt`: kết quả kiểm tra cuối, gồm cả trạng thái bonus chưa làm.
+- `pytest-results.txt`, `grade-summary.txt`: kết quả cuối, bao gồm bonus CI/CD đã đạt.
+- `ci-results.json`: trạng thái ba job test/build/deploy từ GitHub Actions API.
 - `local-python-probes.json`, `ask-log.jsonl`: phép thử Python với fake Redis ban đầu.
 
 Ba ảnh PNG do học viên chụp; các file JSON/TXT là output thực tế của công cụ.

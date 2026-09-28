@@ -1,6 +1,7 @@
-﻿ERROR tests/test_bonus_cicd.py::TestBaoMat::test_action_duoc_ghim_phien_ban
-ERROR tests/test_bonus_cicd.py::TestBadge::test_readme_co_badge - Failed: chư...
-1 failed, 12 errors in 0.08s
+﻿
+>>> BONUS — CI/CD với GitHub Actions (không bắt buộc)
+.............                                                            [100%]
+13 passed in 0.47s
 
 ==========================================================================
 BẢNG ĐIỂM
@@ -13,10 +14,11 @@ BẢNG ĐIỂM
   Exercises — câu hỏi phản ánh                     10/10 câu             15.0/15
 --------------------------------------------------------------------------
   Điểm phần bắt buộc                                                    100.0/100
-  BONUS — CI/CD với GitHub Actions                 0/13 test              +0.0/10
+  BONUS — CI/CD với GitHub Actions                 13/13 test            +10.0/10
 --------------------------------------------------------------------------
   TỔNG CUỐI (trần 100)                                                  100.0/100
 ==========================================================================
+  ⚠  điểm bonus bị cắt 10.0đ do chạm trần 100
 
   Xuất sắc. Service của bạn đã đạt chuẩn production.
 

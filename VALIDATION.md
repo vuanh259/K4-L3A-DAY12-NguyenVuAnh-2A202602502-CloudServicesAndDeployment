@@ -11,13 +11,14 @@
 | CP5 — Render HTTPS, gồm key thật | 9/9 đạt |
 | Test bổ sung đồng thời và lifespan | 2/2 đạt |
 | Local fallback | 4 test bỏ qua vì dùng cloud |
-| Bonus CI/CD | Chưa thực hiện: 1 test fail, 12 lỗi setup do chưa có workflow |
+| Bonus CI/CD | 13/13 đạt; test, build và deploy trên GitHub đều success |
 
-Tổng `pytest tests/ -v`: **81 passed, 4 skipped, 1 failed, 12 errors**.
-Toàn bộ fail/error thuộc file bonus, không phải CP bắt buộc. Không sửa bộ test
-để che lỗi hoặc tự chuyển các test bonus sang skip.
+Tổng `pytest tests/ -v`: **94 passed, 4 skipped**, không có fail/error.
+Bốn test bỏ qua dành riêng cho local fallback. Có một cảnh báo deprecation
+từ Starlette TestClient/httpx; không ảnh hưởng kết quả kiểm tra.
 
-`grade.py`: **100/100 phần bắt buộc, bonus 0/10**. Điểm exercises chỉ đếm số câu;
+`grade.py`: **100/100 phần bắt buộc, bonus 10/10; tổng bị giới hạn ở 100/100**.
+Điểm exercises chỉ đếm số câu;
 giảng viên vẫn đánh giá nội dung và khả năng giải thích. Không coi điểm này là
 chứng nhận ứng dụng đủ an toàn cho LLM trả phí ngoài phạm vi lab.
 
@@ -25,6 +26,8 @@ chứng nhận ứng dụng đủ an toàn cho LLM trả phí ngoài phạm vi l
 
 - [Output pytest](screenshots/pytest-results.txt)
 - [Bảng điểm](screenshots/grade-summary.txt)
+- [Kết quả CI/CD](screenshots/ci-results.json): ba job thành công cho commit
+  `e1baf5b4031f4c115ef014dab0e6aec77033acb0`.
 - [Cloud HTTP](screenshots/cloud-probes.json): hai probe 200, auth 401, 10 lượt hỏi
   200, sau đó 429, history tăng 0, 2, ..., 18.
 - [Docker HTTP](screenshots/docker-probes.json): cùng luồng với Redis thật trên máy.

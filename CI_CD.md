@@ -1,5 +1,11 @@
 # CI/CD của bài lab
 
+Đã chạy thành công ngày 28/09/2026:
+[GitHub Actions run 36419445829](https://github.com/vuanh259/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment/actions/runs/36419445829).
+Cả test, build và deploy đều success. Output API xác minh được lưu tại
+`screenshots/ci-results.json`; bộ test bonus đạt 13/13 và badge báo passing.
+CP5 được chạy lại sau đó và vẫn đạt 9/9 test cloud.
+
 Workflow `.github/workflows/ci.yml` chạy khi push main, mở pull request hoặc
 chạy thủ công từ tab Actions. Ba job chạy theo thứ tự:
 

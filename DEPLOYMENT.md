@@ -101,6 +101,12 @@ Các ảnh minh chứng chụp thực tế từ Render Dashboard và trình duy�
 
 ## Cách triển khai và xác minh
 
+CI/CD đã được bổ sung: `.github/workflows/ci.yml` chạy test → build → deploy.
+Job deploy chỉ chạy trên main sau khi test/build đạt, dùng Deploy Hook trong
+GitHub Secrets và chỉ định đúng commit đã kiểm tra. Lần chạy đầu tiên đã
+thành công cả ba job; xem [CI_CD.md](CI_CD.md). Các bản cập nhật chỉ có báo cáo
+có thể dùng `[skip ci]` để không tạo lượt build/deploy thừa.
+
 Làm theo [DEPLOY_RENDER_FREE.md](DEPLOY_RENDER_FREE.md). Kiểm tra lại bằng:
 
 ```powershell
