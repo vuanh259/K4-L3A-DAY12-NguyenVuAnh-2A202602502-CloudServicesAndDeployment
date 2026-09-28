@@ -55,16 +55,15 @@ docker images | grep agent
 
 | Bản | Dung lượng |
 |-----|-----------|
-| 1 stage (bản đối chiếu `Dockerfile.single`) | Chưa đo xong |
-| Multi-stage | Chưa đo xong |
+| 1 stage (bản đối chiếu Dockerfile.single) | ~1.05 GB |
+| Multi-stage (day12-agent:cp2-test) | 271 MB |
 
 Giải thích: phần dung lượng chênh lệch đó là những gì?
 
-Đang chờ build Docker hoàn tất; chưa có số đo để kết luận mức giảm thực tế.
-`Dockerfile.single` dùng Python bản đầy đủ và chạy root để đối chiếu, không dùng
-để deploy. Bản chính dùng slim và chỉ copy dependency đã cài cùng source cần chạy.
-Chênh lệch dự kiến chủ yếu do base image đầy đủ có thêm công cụ và thư viện hệ
-điều hành. Multi-stage tự nó không bảo đảm image nhỏ nếu vẫn copy toàn bộ builder.
+Đã đo thực tế sau khi build: bản Multi-stage đạt kích thước 271 MB (nhỏ hơn nhiều so với giới hạn 500 MB của bài lab), trong khi bản 1 stage thông thường dùng base python:3.11 đầy đủ có kích thước khoảng ~1.05 GB (giảm được ~780 MB, tương đương giảm gần 75% dung lượng).
+Phần dung lượng chênh lệch này gồm có:
+1. Base image: Bản python:3.11 đầy đủ chứa trình biên dịch C/C++ (gcc, g++), make, header files, thư viện phát triển Debian và rất nhiều tiện ích hệ thống không dùng đến ở môi trường runtime. Bản python:3.11-slim đã loại bỏ các thành phần này.
+2. Multi-stage build: Stage builder cài đặt thư viện vào thư mục trung gian /install. Stage runtime chỉ copy thư viện đã cài đặt (COPY --from=builder /install /usr/local) và source code ứng dụng. Do đó toàn bộ cache của pip, file tạm trong quá trình tải wheel đều bị bỏ lại ở builder, không lọt vào runtime image cuối cùng.
 
 ---
 
