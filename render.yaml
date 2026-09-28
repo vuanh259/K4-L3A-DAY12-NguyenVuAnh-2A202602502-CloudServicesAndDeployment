@@ -11,6 +11,7 @@ services:
     plan: free
     region: singapore
     healthCheckPath: /ready
+    autoDeployTrigger: 'off'
     envVars:
       - key: AGENT_API_KEY
         generateValue: true

@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Test application without external deployment
+        run: python -m pytest tests/ --ignore=tests/test_cp5.py --ignore=tests/test_bonus_cicd.py -m "not docker" -v
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build production image
+        run: docker build -t day12-agent:ci .
+      - name: Verify non-root image and size
+        run: |
+          test "$(docker image inspect day12-agent:ci --format '{{.Config.User}}')" = '10001:10001'
+          test "$(docker image inspect day12-agent:ci --format '{{.Size}}')" -lt 500000000
+
+  deploy:
+    needs: [test, build]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Deploy verified commit to Render
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo 'Missing GitHub secret RENDER_DEPLOY_HOOK_URL.'
+            exit 1
+          fi
+          # Pin the deployment to the commit that passed this workflow.
+          curl --fail --silent --show-error --output /dev/null \
+            --request POST "${RENDER_DEPLOY_HOOK_URL}&ref=${GITHUB_SHA}"
