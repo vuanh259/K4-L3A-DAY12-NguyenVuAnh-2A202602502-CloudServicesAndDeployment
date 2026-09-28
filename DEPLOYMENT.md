@@ -68,15 +68,24 @@ Dữ liệu gốc: [local-python-probes.json](screenshots/local-python-probes.js
 Log thật: [ask-log.jsonl](screenshots/ask-log.jsonl).
 Đây chưa phải kết quả Docker hay cloud, chưa đủ chứng minh CP5.
 
-## Docker và minh chứng còn chờ
+## Ảnh minh chứng triển khai Cloud (Render)
 
-Docker Engine đã chạy, nhưng việc tải image từ Docker Hub gặp `unexpected EOF`
-và lỗi lấy OAuth token. Build image, số đo dung lượng, ba instance và ảnh chụp
-Docker vẫn đang chờ kiểm tra thực tế. Không bật LOCAL_FALLBACK vì stack Docker
-chưa được xác nhận chạy thành công.
+Các ảnh minh chứng chụp thực tế từ Render Dashboard và trình duyệt web:
 
-Ảnh dashboard và hai endpoint sẽ được lưu trong `screenshots/` sau khi deploy.
-Hiện chưa có ảnh minh chứng cloud; không dùng ảnh tạo giả để thay thế.
+1. **Dashboard Render Blueprint Sync:**
+   - Trạng thái Sync nhánh `main` thành công gồm Web Service `day12-agent-nguyenvuanh` và Key Value `day12-redis-nguyenvuanh`.
+   - Đường dẫn ảnh: [dashboard.png](screenshots/dashboard.png)
+   ![Dashboard Render](screenshots/dashboard.png)
+
+2. **Kiểm tra Liveness (`/health`):**
+   - Truy cập `https://day12-agent-nguyenvuanh.onrender.com/health` trả về `{"status":"ok","service":"day12-agent","version":"1.0.0"}`.
+   - Đường dẫn ảnh: [health.png](screenshots/health.png)
+   ![Endpoint /health](screenshots/health.png)
+
+3. **Kiểm tra Readiness (`/ready`):**
+   - Truy cập `https://day12-agent-nguyenvuanh.onrender.com/ready` trả về `{"status":"ready","redis":true}` xác nhận kết nối thành công tới Redis trên Cloud.
+   - Đường dẫn ảnh: [ready.png](screenshots/ready.png)
+   ![Endpoint /ready](screenshots/ready.png)
 
 ## Cách triển khai và xác minh
 
