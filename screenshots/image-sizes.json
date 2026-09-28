@@ -1,0 +1,18 @@
+[
+  {
+    "image": "agent:single",
+    "bytes": 1695833068,
+    "MB": 1695.83,
+    "MiB": 1617.27,
+    "id": "sha256:989c45452cc7159d11425531ca89a71d7e087eeafc20c3285b10592b9c6bf7d7",
+    "user": null
+  },
+  {
+    "image": "day12-agent:prod",
+    "bytes": 270915050,
+    "MB": 270.92,
+    "MiB": 258.36,
+    "id": "sha256:bdedccea19d2dcbf81a30889ca2f70c9ec08833e0e4309db68c6cce81cad02e7",
+    "user": "10001:10001"
+  }
+]

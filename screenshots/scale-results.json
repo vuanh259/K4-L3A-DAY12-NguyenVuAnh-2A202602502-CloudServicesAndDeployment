@@ -1,0 +1,26 @@
+[
+  {
+    "container": "day12-scale-agent-1",
+    "history_length": 0
+  },
+  {
+    "container": "day12-scale-agent-2",
+    "history_length": 2
+  },
+  {
+    "container": "day12-scale-agent-3",
+    "history_length": 4
+  },
+  {
+    "container": "day12-scale-agent-1",
+    "history_length": 6
+  },
+  {
+    "container": "day12-scale-agent-2",
+    "history_length": 8
+  },
+  {
+    "container": "day12-scale-agent-3",
+    "history_length": 10
+  }
+]

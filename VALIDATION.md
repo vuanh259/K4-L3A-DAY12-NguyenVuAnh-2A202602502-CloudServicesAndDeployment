@@ -1,45 +1,52 @@
-# Kiểm tra thực tế — 28/09/2026
+# Kiểm tra bản nộp — 28/09/2026
 
-## Đã đạt
+Đã chạy đủ `python -m pytest tests/ -v` và `python grade.py`, không loại test Docker.
 
-Lệnh:
+| Nhóm | Kết quả |
+|---|---|
+| CP1 — Config, health, log | 13/13 đạt |
+| CP2 — Docker, gồm build thật và dung lượng | 16/16 đạt |
+| CP3 — Authentication, rate limit, cost guard | 22/22 đạt |
+| CP4 — Redis, readiness, shutdown | 19/19 đạt |
+| CP5 — Render HTTPS, gồm key thật | 9/9 đạt |
+| Test bổ sung đồng thời và lifespan | 2/2 đạt |
+| Local fallback | 4 test bỏ qua vì dùng cloud |
+| Bonus CI/CD | Chưa thực hiện: 1 test fail, 12 lỗi setup do chưa có workflow |
 
-```powershell
-.\.venv\Scripts\python.exe -m pytest tests/test_cp1.py tests/test_cp2.py tests/test_cp3.py tests/test_cp4.py tests/test_reliability_extra.py -m "not docker" -q -p no:cacheprovider
-```
+Tổng `pytest tests/ -v`: **81 passed, 4 skipped, 1 failed, 12 errors**.
+Toàn bộ fail/error thuộc file bonus, không phải CP bắt buộc. Không sửa bộ test
+để che lỗi hoặc tự chuyển các test bonus sang skip.
 
-Kết quả: **70 passed, 2 deselected**. Phân bố: CP1 13, CP2 static 14, CP3 22,
-CP4 19, kiểm tra bổ sung 2. Có cảnh báo deprecation từ Starlette TestClient/httpx.
+`grade.py`: **100/100 phần bắt buộc, bonus 0/10**. Điểm exercises chỉ đếm số câu;
+giảng viên vẫn đánh giá nội dung và khả năng giải thích. Không coi điểm này là
+chứng nhận ứng dụng đủ an toàn cho LLM trả phí ngoài phạm vi lab.
 
-Chạy server thật bằng Python ở cổng 8001 và `scripts/check_service.py` cũng đã
-đạt auth, history và rate limit. Backend lần chạy này là fake Redis.
-Xem `screenshots/local-python-probes.json` và `screenshots/ask-log.jsonl`.
+## Bằng chứng
 
-## Chưa xác nhận
+- [Output pytest](screenshots/pytest-results.txt)
+- [Bảng điểm](screenshots/grade-summary.txt)
+- [Cloud HTTP](screenshots/cloud-probes.json): hai probe 200, auth 401, 10 lượt hỏi
+  200, sau đó 429, history tăng 0, 2, ..., 18.
+- [Docker HTTP](screenshots/docker-probes.json): cùng luồng với Redis thật trên máy.
+- [Ba container](screenshots/scale-results.json): gọi luân phiên agent 1/2/3,
+  history tăng 0, 2, 4, 6, 8, 10.
+- [Non-root và container](screenshots/docker-runtime.txt): UID 10001.
+- [Cache](screenshots/docker-cache.txt): pip install CACHED khi chỉ thay source.
+- [Shutdown thật](screenshots/shutdown-results.json): Docker stop, exit code 0,
+  có log service_stopped, hoàn thành khoảng 0,75 giây.
+- [Redis mất kết nối](screenshots/dependency-failure.json): health 200, ready 503;
+  Redis được khởi động lại sau phép thử.
+- [Dashboard](screenshots/dashboard.png), [health](screenshots/health.png),
+  [ready](screenshots/ready.png): ảnh thật đã được mở và kiểm tra.
 
-- Hai test Docker build/kích thước: đang bị chặn bởi tải image chậm/lỗi EOF.
-- Stack Docker thực tế, thí nghiệm scale ba container, cache và kích thước hai image.
-- Ảnh dashboard và probes cloud (HTTP cloud đã kiểm tra thành công, xem bên dưới).
-- Câu phản ánh 3, 4, 9, 10 còn thiếu thí nghiệm tương ứng; đã ghi rõ trong bản nháp.
-- Bonus CI/CD chưa thực hiện.
+## Lưu ý trước khi nộp
 
-## Chấm tự động tạm thời
+`exercises.md` có hỗ trợ AI. Học viên cần đọc, kiểm chứng và diễn đạt theo cách
+hiểu của mình. Câu 10 nói rõ không gặp lỗi runtime/build trên Render; các lỗi
+đã gặp ở Docker local và môi trường kiểm thử được phân biệt với lỗi cloud.
+Không tạo sự cố cloud giả để viết báo cáo.
 
-Đã chạy `grade.py` với `PYTEST_ADDOPTS='-m "not docker"'` để tránh lặp lại build
-đang bị kẹt mạng. Output tính 92,5/100, **không phải điểm hoàn thành được xác nhận**:
-grader phân bổ lại điểm CP2 khi bỏ test Docker và chỉ đếm câu phản ánh có chữ,
-không kiểm chứng thí nghiệm. CP5 mới đạt bốn test tài liệu, chưa đạt public deployment.
-Không dùng kết quả này để khẳng định bài đã xong hoặc đạt chuẩn production.
-
-Cần chạy lại `pytest tests/ -v` và `python grade.py` không loại Docker sau khi
-Docker và cloud sẵn sàng, rồi cập nhật tài liệu này bằng kết quả cuối.
-
-## Cloud đã xác nhận sau khi có URL
-
-URL: https://day12-agent-nguyenvuanh.onrender.com
-
-`pytest tests/test_cp5.py -v -p no:cacheprovider`: **9 passed, 4 skipped**.
-Bốn test local fallback không áp dụng. Test `/ask` có API key thật đã đạt.
-Script HTTP bổ sung cũng xác nhận health/ready 200, thiếu/sai key 401,
-10 lượt hỏi hợp lệ trả 200 với history 0, 2, ..., 18, và lượt 11–12 trả 429.
-Output thật lưu tại `screenshots/cloud-probes.json`.
+Hai image đã build và đo bằng `docker image inspect`:
+single-stage 1695,83 MB, multi-stage 270,92 MB, giảm 84,02%.
+Số byte chính xác và image ID: [image-sizes.json](screenshots/image-sizes.json).
+Số ước lượng cũ trong câu 3 đã được thay bằng kết quả này.

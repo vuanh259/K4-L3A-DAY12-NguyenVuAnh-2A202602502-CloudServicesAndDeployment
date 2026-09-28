@@ -48,22 +48,29 @@ Một câu in “đã trả lời xong” không cung cấp các trường này 
 Build cả hai phiên bản và ghi lại số đo thật:
 
 ```bash
-docker build -f <Dockerfile-1-stage> -t agent:single .
-docker build -t agent:multi .
+docker build -f Dockerfile.single -t agent:single .
+docker build -t day12-agent:prod .
 docker images | grep agent
 ```
 
 | Bản | Dung lượng |
 |-----|-----------|
-| 1 stage (bản đối chiếu Dockerfile.single) | ~1.05 GB |
-| Multi-stage (day12-agent:cp2-test) | 271 MB |
+| 1 stage (`agent:single`, từ `Dockerfile.single`) | 1695,83 MB |
+| Multi-stage (`day12-agent:prod`) | 270,92 MB |
 
 Giải thích: phần dung lượng chênh lệch đó là những gì?
 
-Đã đo thực tế sau khi build: bản Multi-stage đạt kích thước 271 MB (nhỏ hơn nhiều so với giới hạn 500 MB của bài lab), trong khi bản 1 stage thông thường dùng base python:3.11 đầy đủ có kích thước khoảng ~1.05 GB (giảm được ~780 MB, tương đương giảm gần 75% dung lượng).
-Phần dung lượng chênh lệch này gồm có:
-1. Base image: Bản python:3.11 đầy đủ chứa trình biên dịch C/C++ (gcc, g++), make, header files, thư viện phát triển Debian và rất nhiều tiện ích hệ thống không dùng đến ở môi trường runtime. Bản python:3.11-slim đã loại bỏ các thành phần này.
-2. Multi-stage build: Stage builder cài đặt thư viện vào thư mục trung gian /install. Stage runtime chỉ copy thư viện đã cài đặt (COPY --from=builder /install /usr/local) và source code ứng dụng. Do đó toàn bộ cache của pip, file tạm trong quá trình tải wheel đều bị bỏ lại ở builder, không lọt vào runtime image cuối cùng.
+Đo bằng `docker image inspect`: single-stage là 1.695.833.068 byte,
+multi-stage là 270.915.050 byte; bảng dùng MB = 1.000.000 byte. Giảm khoảng
+1424,92 MB, tương đương 84,02%. `docker images` làm tròn thành 1,7 GB và 271 MB.
+Output gốc kèm image ID nằm ở `screenshots/image-sizes.json`.
+
+Chênh lệch chủ yếu đến từ base Python đầy đủ có thêm công cụ build, header và
+thư viện hệ điều hành; bản slim lược bỏ nhiều thành phần đó. Multi-stage chỉ
+đưa dependency đã cài và source cần chạy sang runtime, không đưa cả thư mục
+builder sang. Cả hai Dockerfile đều dùng pip `--no-cache-dir`, nên không quy
+toàn bộ chênh lệch cho pip cache. Đây là so sánh cả base image lẫn cách đóng gói,
+không phải phép đo riêng tác động của multi-stage trên cùng một base.
 
 ---
 
@@ -77,8 +84,10 @@ Theo thứ tự Dockerfile, sửa `app/main.py` giữ được cache của bư�
 requirements, pip install, tạo user và copy dependency từ builder. Layer
 `COPY app ./app` và các layer đứng sau bị xây dựng lại. Nếu copy toàn bộ code
 trước pip install thì sửa source sẽ làm mất cache của bước cài dependency.
-Đây là phân tích Dockerfile; thí nghiệm sửa một ký tự và build lại còn chờ
-build lần đầu hoàn tất để xác nhận bằng dòng `CACHED` trong output.
+Đã chạy thí nghiệm thêm một comment vào bản sao `app/main.py`, rồi build lại.
+Log `screenshots/docker-cache.txt` xác nhận COPY requirements, pip install,
+tạo user và COPY dependency đều `CACHED`; COPY app và COPY utils chạy lại.
+Bản sao được dùng để giữ nguyên source chính trong khi kiểm tra cache.
 
 ---
 
@@ -137,7 +146,9 @@ và đủ số lần lỗi, nó có thể restart cả ba container. Restart API
 Redis, nên các container mới tiếp tục lỗi và có thể tạo vòng restart. Thực tế
 có restart hay không phụ thuộc chính sách orchestrator; Docker HEALTHCHECK
 đơn thuần chỉ đánh dấu unhealthy. Tách probe thì `/health` vẫn 200, `/ready`
-503 trong lúc Redis lỗi; test tình huống này đã đạt.
+503 trong lúc Redis lỗi; test tình huống này đã đạt. Đã thử dừng Redis thật
+trong stack local: `/health` trả 200 và `/ready` trả 503 với `redis: false`,
+rồi khởi động lại Redis. Output nằm ở `screenshots/dependency-failure.json`.
 
 ---
 
@@ -147,13 +158,13 @@ Chạy `docker compose up --scale agent=3` rồi gọi `/ask` nhiều lần vớ
 `X-User-Id`. Quan sát `history_length` trong response. Nếu lịch sử được lưu
 trong một dict Python thay vì Redis, bạn sẽ thấy con số đó thay đổi thế nào?
 
-Chạy HTTP trên một process với fake Redis đã quan sát history_length lần lượt
-0, 2, 4, ..., 18; mỗi câu hỏi thêm hai message. Test hai ConversationStore
-dùng cùng Redis giả cũng xác nhận đọc được dữ liệu của nhau. Chưa coi hai phép
-thử này là bằng chứng ba container: thí nghiệm đó còn chờ Docker tải image.
-Đã chuẩn bị `docker-compose.scale.yml` để ba agent dùng Redis chung và Nginx
-ở cổng 8080. Nếu dùng dict riêng, request tới instance khác có thể thấy 0 hoặc
-lịch sử ngắn hơn, khiến chuỗi history_length bị ngắt thay vì tăng liên tục.
+Đã chạy ba container bằng `docker compose -p day12-scale -f docker-compose.scale.yml
+up -d --no-build --scale agent=3 agent`. Gửi HTTP trực tiếp lần lượt tới agent
+1, 2, 3, 1, 2, 3 với cùng user ID, quan sát history_length là 0, 2, 4, 6, 8, 10.
+Kết quả gốc nằm trong `screenshots/scale-results.json`. Phép thử này không dùng
+Nginx: gọi từng container giúp biết chắc request đã đi qua ba process khác nhau.
+Nếu dùng dict riêng, ba lượt đầu sẽ đều thấy 0 và các lượt sau chỉ thấy lịch sử
+của từng instance, thay vì lịch sử chung tăng liên tục.
 
 ---
 

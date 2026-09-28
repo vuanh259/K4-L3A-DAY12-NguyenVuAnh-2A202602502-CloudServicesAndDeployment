@@ -1,0 +1,323 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- E:\VinUni20K\DAY12\K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: E:\VinUni20K\DAY12\K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment
+plugins: anyio-4.15.1
+collecting ... collected 98 items
+
+tests/test_bonus_cicd.py::TestTrigger::test_chay_khi_push_va_pull_request ERROR [  1%]
+tests/test_bonus_cicd.py::TestJobTest::test_co_job_chay_pytest ERROR     [  2%]
+tests/test_bonus_cicd.py::TestJobTest::test_khong_chay_test_can_deploy_trong_ci ERROR [  3%]
+tests/test_bonus_cicd.py::TestJobTest::test_co_cai_dependency ERROR      [  4%]
+tests/test_bonus_cicd.py::TestJobBuild::test_co_buoc_build_docker_image ERROR [  5%]
+tests/test_bonus_cicd.py::TestJobDeploy::test_co_job_deploy ERROR        [  6%]
+tests/test_bonus_cicd.py::TestJobDeploy::test_deploy_chi_chay_sau_khi_test_xanh ERROR [  7%]
+tests/test_bonus_cicd.py::TestJobDeploy::test_deploy_gioi_han_nhanh ERROR [  8%]
+tests/test_bonus_cicd.py::TestBaoMat::test_secret_lay_tu_github_secrets ERROR [  9%]
+tests/test_bonus_cicd.py::TestBaoMat::test_khong_hardcode_token ERROR    [ 10%]
+tests/test_bonus_cicd.py::TestBaoMat::test_action_duoc_ghim_phien_ban ERROR [ 11%]
+tests/test_bonus_cicd.py::TestBadge::test_readme_co_badge ERROR          [ 12%]
+tests/test_bonus_cicd.py::TestBadge::test_badge_bao_passing FAILED       [ 13%]
+tests/test_cp1.py::TestConfig::test_settings_co_du_cac_truong PASSED     [ 14%]
+tests/test_cp1.py::TestConfig::test_doc_gia_tri_tu_bien_moi_truong PASSED [ 15%]
+tests/test_cp1.py::TestConfig::test_gia_tri_mac_dinh_hop_ly PASSED       [ 16%]
+tests/test_cp1.py::TestConfig::test_thieu_api_key_thi_fail_fast PASSED   [ 17%]
+tests/test_cp1.py::TestConfig::test_khong_hardcode_secret PASSED         [ 18%]
+tests/test_cp1.py::TestStructuredLogging::test_log_event_tra_ve_json_hop_le PASSED [ 19%]
+tests/test_cp1.py::TestStructuredLogging::test_log_event_gan_them_truong_tuy_y PASSED [ 20%]
+tests/test_cp1.py::TestStructuredLogging::test_level_luon_viet_thuong PASSED [ 21%]
+tests/test_cp1.py::TestStructuredLogging::test_log_ra_stdout_dung_mot_dong PASSED [ 22%]
+tests/test_cp1.py::TestStructuredLogging::test_timestamp_dung_dinh_dang_iso PASSED [ 23%]
+tests/test_cp1.py::TestHealthEndpoint::test_health_tra_ve_200 PASSED     [ 24%]
+tests/test_cp1.py::TestHealthEndpoint::test_health_khong_can_api_key PASSED [ 25%]
+tests/test_cp1.py::TestHealthEndpoint::test_health_khong_phu_thuoc_dependency_nao PASSED [ 26%]
+tests/test_cp2.py::TestDockerfile::test_multi_stage_build PASSED         [ 27%]
+tests/test_cp2.py::TestDockerfile::test_base_image_gon_nhe PASSED        [ 28%]
+tests/test_cp2.py::TestDockerfile::test_cai_dependency_truoc_khi_copy_source PASSED [ 29%]
+tests/test_cp2.py::TestDockerfile::test_khong_chay_bang_root PASSED      [ 30%]
+tests/test_cp2.py::TestDockerfile::test_co_healthcheck PASSED            [ 31%]
+tests/test_cp2.py::TestDockerfile::test_khong_hardcode_secret PASSED     [ 32%]
+tests/test_cp2.py::TestDockerignore::test_ton_tai_va_day_du PASSED       [ 33%]
+tests/test_cp2.py::TestDockerignore::test_khong_loai_tru_nham_file_can_thiet PASSED [ 34%]
+tests/test_cp2.py::TestDockerCompose::test_co_service_agent_va_redis PASSED [ 35%]
+tests/test_cp2.py::TestDockerCompose::test_agent_build_tu_dockerfile PASSED [ 36%]
+tests/test_cp2.py::TestDockerCompose::test_agent_phu_thuoc_redis PASSED  [ 37%]
+tests/test_cp2.py::TestDockerCompose::test_agent_tro_dung_toi_redis_service PASSED [ 38%]
+tests/test_cp2.py::TestDockerCompose::test_secret_khong_nam_trong_compose PASSED [ 39%]
+tests/test_cp2.py::TestDockerCompose::test_agent_co_healthcheck PASSED   [ 40%]
+tests/test_cp2.py::TestBuildThat::test_build_thanh_cong PASSED           [ 41%]
+tests/test_cp2.py::TestBuildThat::test_image_du_nho PASSED               [ 42%]
+tests/test_cp3.py::TestAuthentication::test_khong_co_key_thi_401 PASSED  [ 43%]
+tests/test_cp3.py::TestAuthentication::test_sai_key_thi_401 PASSED       [ 44%]
+tests/test_cp3.py::TestAuthentication::test_dung_key_thi_200 PASSED      [ 45%]
+tests/test_cp3.py::TestAuthentication::test_tra_ve_dung_user_id PASSED   [ 46%]
+tests/test_cp3.py::TestAuthentication::test_khong_gui_user_id_thi_thanh_anonymous PASSED [ 47%]
+tests/test_cp3.py::TestAuthentication::test_so_sanh_key_chong_timing_attack PASSED [ 48%]
+tests/test_cp3.py::TestRateLimiter::test_trong_han_muc_thi_cho_qua PASSED [ 50%]
+tests/test_cp3.py::TestRateLimiter::test_vuot_han_muc_thi_429 PASSED     [ 51%]
+tests/test_cp3.py::TestRateLimiter::test_cua_so_truot_qua_thi_duoc_goi_lai PASSED [ 52%]
+tests/test_cp3.py::TestRateLimiter::test_moi_user_mot_han_muc_rieng PASSED [ 53%]
+tests/test_cp3.py::TestRateLimiter::test_dem_dung_so_request PASSED      [ 54%]
+tests/test_cp3.py::TestRateLimiter::test_qua_http_thi_tra_429 PASSED     [ 55%]
+tests/test_cp3.py::TestRateLimiter::test_401_duoc_kiem_tra_truoc_429 PASSED [ 56%]
+tests/test_cp3.py::TestCostGuard::test_chua_tieu_gi_thi_spent_bang_0 PASSED [ 57%]
+tests/test_cp3.py::TestCostGuard::test_record_cong_don PASSED            [ 58%]
+tests/test_cp3.py::TestCostGuard::test_con_ngan_sach_thi_cho_qua PASSED  [ 59%]
+tests/test_cp3.py::TestCostGuard::test_vuot_ngan_sach_thi_402 PASSED     [ 60%]
+tests/test_cp3.py::TestCostGuard::test_moi_user_mot_ngan_sach_rieng PASSED [ 61%]
+tests/test_cp3.py::TestCostGuard::test_qua_http_thi_tra_402 PASSED       [ 62%]
+tests/test_cp3.py::TestCostGuard::test_ask_ghi_nhan_chi_phi PASSED       [ 63%]
+tests/test_cp3.py::TestAskResponse::test_tra_du_cac_truong PASSED        [ 64%]
+tests/test_cp3.py::TestAskResponse::test_cau_hoi_rong_thi_422 PASSED     [ 65%]
+tests/test_cp4.py::TestConversationStore::test_luu_va_doc_lai_duoc PASSED [ 66%]
+tests/test_cp4.py::TestConversationStore::test_chua_co_gi_thi_tra_list_rong PASSED [ 67%]
+tests/test_cp4.py::TestConversationStore::test_moi_user_mot_lich_su_rieng PASSED [ 68%]
+tests/test_cp4.py::TestConversationStore::test_cat_bot_lich_su_qua_dai PASSED [ 69%]
+tests/test_cp4.py::TestConversationStore::test_co_dat_han_su_dung PASSED [ 70%]
+tests/test_cp4.py::TestConversationStore::test_ping_bao_dung_trang_thai PASSED [ 71%]
+tests/test_cp4.py::TestConversationStore::test_ping_khong_nem_loi_khi_redis_chet PASSED [ 72%]
+tests/test_cp4.py::TestConversationStore::test_fake_url_tra_ve_redis_gia PASSED [ 73%]
+tests/test_cp4.py::TestStateless::test_state_khong_nam_trong_process PASSED [ 74%]
+tests/test_cp4.py::TestStateless::test_khong_co_bien_toan_cuc_giu_state PASSED [ 75%]
+tests/test_cp4.py::TestStateless::test_lich_su_duoc_dung_lai_giua_cac_request PASSED [ 76%]
+tests/test_cp4.py::TestReadiness::test_ready_tra_200_khi_redis_song PASSED [ 77%]
+tests/test_cp4.py::TestReadiness::test_ready_tra_503_khi_redis_chet PASSED [ 78%]
+tests/test_cp4.py::TestReadiness::test_ready_khac_health PASSED          [ 79%]
+tests/test_cp4.py::TestGracefulShutdown::test_nhan_tin_hieu_thi_bat_co PASSED [ 80%]
+tests/test_cp4.py::TestGracefulShutdown::test_dang_ky_handler_cho_sigterm_va_sigint PASSED [ 81%]
+tests/test_cp4.py::TestGracefulShutdown::test_nhuong_lai_cho_handler_cu PASSED [ 82%]
+tests/test_cp4.py::TestGracefulShutdown::test_health_bao_503_khi_dang_tat PASSED [ 83%]
+tests/test_cp4.py::TestGracefulShutdown::test_ready_bao_503_khi_dang_tat PASSED [ 84%]
+tests/test_cp5.py::TestDeploymentDoc::test_da_dien_thong_tin_ca_nhan PASSED [ 85%]
+tests/test_cp5.py::TestDeploymentDoc::test_ghi_ro_platform PASSED        [ 86%]
+tests/test_cp5.py::TestDeploymentDoc::test_liet_ke_bien_moi_truong PASSED [ 87%]
+tests/test_cp5.py::TestDeploymentDoc::test_khong_lo_secret_trong_tai_lieu PASSED [ 88%]
+tests/test_cp5.py::TestPublicDeployment::test_url_dung_https PASSED      [ 89%]
+tests/test_cp5.py::TestPublicDeployment::test_health_tra_ve_200 PASSED   [ 90%]
+tests/test_cp5.py::TestPublicDeployment::test_ready_tra_ve_200 PASSED    [ 91%]
+tests/test_cp5.py::TestPublicDeployment::test_ask_yeu_cau_xac_thuc PASSED [ 92%]
+tests/test_cp5.py::TestPublicDeployment::test_ask_hoat_dong_voi_key_that PASSED [ 93%]
+tests/test_cp5.py::TestLocalFallback::test_stack_dang_chay SKIPPED (...) [ 94%]
+tests/test_cp5.py::TestLocalFallback::test_ready_ket_noi_duoc_redis SKIPPED [ 95%]
+tests/test_cp5.py::TestLocalFallback::test_ask_yeu_cau_xac_thuc SKIPPED  [ 96%]
+tests/test_cp5.py::TestLocalFallback::test_co_anh_chup_man_hinh SKIPPED  [ 97%]
+tests/test_reliability_extra.py::test_rate_limit_is_atomic_across_instances PASSED [ 98%]
+tests/test_reliability_extra.py::test_lifespan_can_start_in_testclient_thread PASSED [100%]
+
+=================================== ERRORS ====================================
+______ ERROR at setup of TestTrigger.test_chay_khi_push_va_pull_request _______
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+____________ ERROR at setup of TestJobTest.test_co_job_chay_pytest ____________
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+___ ERROR at setup of TestJobTest.test_khong_chay_test_can_deploy_trong_ci ____
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+____________ ERROR at setup of TestJobTest.test_co_cai_dependency _____________
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+_______ ERROR at setup of TestJobBuild.test_co_buoc_build_docker_image ________
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+_____________ ERROR at setup of TestJobDeploy.test_co_job_deploy ______________
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+___ ERROR at setup of TestJobDeploy.test_deploy_chi_chay_sau_khi_test_xanh ____
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+_________ ERROR at setup of TestJobDeploy.test_deploy_gioi_han_nhanh __________
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+_______ ERROR at setup of TestBaoMat.test_secret_lay_tu_github_secrets ________
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+___________ ERROR at setup of TestBaoMat.test_khong_hardcode_token ____________
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+________ ERROR at setup of TestBaoMat.test_action_duoc_ghim_phien_ban _________
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+______________ ERROR at setup of TestBadge.test_readme_co_badge _______________
+
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    @pytest.fixture(scope="module")
+    def workflow_path(repo_root):
+        folder = repo_root / WORKFLOW_DIR
+        if not folder.exists():
+>           pytest.fail(
+                f"chưa có thư mục {WORKFLOW_DIR}/ — phần bonus này yêu cầu bạn tự "
+                "viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus."
+            )
+E           Failed: chưa có thư mục .github/workflows/ — phần bonus này yêu cầu bạn tự viết một workflow GitHub Actions. Xem LAB_GUIDE.md § Bonus.
+
+tests\test_bonus_cicd.py:31: Failed
+================================== FAILURES ===================================
+______________________ TestBadge.test_badge_bao_passing _______________________
+
+self = <test_bonus_cicd.TestBadge object at 0x00000223328DFD40>
+repo_root = WindowsPath('E:/VinUni20K/DAY12/K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment')
+
+    def test_badge_bao_passing(self, repo_root):
+        """Bằng chứng cuối cùng: workflow đã chạy thật và đang xanh."""
+        readme = (repo_root / "README.md").read_text(encoding="utf-8")
+        match = re.search(r"https://github\.com/\S+?/badge\.svg[^\s)\]]*", readme)
+        if not match:
+>           pytest.fail("không tìm thấy URL badge hợp lệ trong README.md")
+E           Failed: không tìm thấy URL badge hợp lệ trong README.md
+
+tests\test_bonus_cicd.py:216: Failed
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  E:\VinUni20K\DAY12\K4-L3A-DAY12-NguyenVuAnh-2A202602502-CloudServicesAndDeployment\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_bonus_cicd.py::TestBadge::test_badge_bao_passing - Failed: ...
+ERROR tests/test_bonus_cicd.py::TestTrigger::test_chay_khi_push_va_pull_request
+ERROR tests/test_bonus_cicd.py::TestJobTest::test_co_job_chay_pytest - Failed...
+ERROR tests/test_bonus_cicd.py::TestJobTest::test_khong_chay_test_can_deploy_trong_ci
+ERROR tests/test_bonus_cicd.py::TestJobTest::test_co_cai_dependency - Failed:...
+ERROR tests/test_bonus_cicd.py::TestJobBuild::test_co_buoc_build_docker_image
+ERROR tests/test_bonus_cicd.py::TestJobDeploy::test_co_job_deploy - Failed: c...
+ERROR tests/test_bonus_cicd.py::TestJobDeploy::test_deploy_chi_chay_sau_khi_test_xanh
+ERROR tests/test_bonus_cicd.py::TestJobDeploy::test_deploy_gioi_han_nhanh - F...
+ERROR tests/test_bonus_cicd.py::TestBaoMat::test_secret_lay_tu_github_secrets
+ERROR tests/test_bonus_cicd.py::TestBaoMat::test_khong_hardcode_token - Faile...
+ERROR tests/test_bonus_cicd.py::TestBaoMat::test_action_duoc_ghim_phien_ban
+ERROR tests/test_bonus_cicd.py::TestBadge::test_readme_co_badge - Failed: chư...
+======= 1 failed, 81 passed, 4 skipped, 1 warning, 12 errors in 16.65s ========

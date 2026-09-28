@@ -1,0 +1,6 @@
+Runtime UID: 10001
+NAME                  IMAGE              COMMAND                  SERVICE   CREATED          STATUS                        PORTS
+day12-scale-agent-1   day12-agent:prod   "sh -c 'exec uvicorn…"   agent     59 minutes ago   Up About a minute (healthy)   8000/tcp
+day12-scale-agent-2   day12-agent:prod   "sh -c 'exec uvicorn…"   agent     59 minutes ago   Up About a minute (healthy)   8000/tcp
+day12-scale-agent-3   day12-agent:prod   "sh -c 'exec uvicorn…"   agent     59 minutes ago   Up About a minute (healthy)   8000/tcp
+day12-scale-redis-1   redis:7-alpine     "docker-entrypoint.s…"   redis     59 minutes ago   Up About a minute (healthy)   6379/tcp

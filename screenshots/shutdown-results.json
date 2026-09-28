@@ -1,0 +1,7 @@
+{
+  "container": "day12-scale-agent-3",
+  "stop_seconds": 0.75,
+  "exit_code": 0,
+  "oom_killed": false,
+  "service_stopped_logged": true
+}

@@ -1,0 +1,191 @@
+﻿{
+  "timestamp": "2026-09-28T10:51:28.172236+00:00",
+  "base_url": "http://127.0.0.1:8000",
+  "checks": [
+    {
+      "name": "health",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "service": "day12-agent",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "name": "ready",
+      "status": 200,
+      "body": {
+        "status": "ready",
+        "redis": true
+      }
+    },
+    {
+      "name": "missing_key",
+      "status": 401,
+      "body": {
+        "detail": "invalid or missing API key"
+      }
+    },
+    {
+      "name": "wrong_key",
+      "status": 401,
+      "body": {
+        "detail": "invalid or missing API key"
+      }
+    },
+    {
+      "name": "ask_1",
+      "status": 200,
+      "body": {
+        "answer": "Theo mình hiểu, Explain Docker liên quan tới cách hệ thống được đóng gói và vận hành. Điểm mấu chốt là tách cấu hình ra khỏi code và giữ service ở trạng thái stateless.",
+        "user_id": "evidence-13c71e185e",
+        "history_length": 0,
+        "cost_usd": 2.565e-05,
+        "tokens": {
+          "in": 3,
+          "out": 42
+        }
+      }
+    },
+    {
+      "name": "ask_2",
+      "status": 200,
+      "body": {
+        "answer": "Theo mình hiểu, Explain Docker liên quan tới cách hệ thống được đóng gói và vận hành. Điểm mấu chốt là tách cấu hình ra khỏi code và giữ service ở trạng thái stateless. (Mình đang nhớ 2 lượt trao đổi trước đó.)",
+        "user_id": "evidence-13c71e185e",
+        "history_length": 2,
+        "cost_usd": 3.855e-05,
+        "tokens": {
+          "in": 49,
+          "out": 52
+        }
+      }
+    },
+    {
+      "name": "ask_3",
+      "status": 200,
+      "body": {
+        "answer": "Theo mình hiểu, Explain Docker liên quan tới cách hệ thống được đóng gói và vận hành. Điểm mấu chốt là tách cấu hình ra khỏi code và giữ service ở trạng thái stateless. (Mình đang nhớ 4 lượt trao đổi trước đó.)",
+        "user_id": "evidence-13c71e185e",
+        "history_length": 4,
+        "cost_usd": 4.695e-05,
+        "tokens": {
+          "in": 105,
+          "out": 52
+        }
+      }
+    },
+    {
+      "name": "ask_4",
+      "status": 200,
+      "body": {
+        "answer": "Theo mình hiểu, Explain Docker liên quan tới cách hệ thống được đóng gói và vận hành. Điểm mấu chốt là tách cấu hình ra khỏi code và giữ service ở trạng thái stateless. (Mình đang nhớ 6 lượt trao đổi trước đó.)",
+        "user_id": "evidence-13c71e185e",
+        "history_length": 6,
+        "cost_usd": 5.535e-05,
+        "tokens": {
+          "in": 161,
+          "out": 52
+        }
+      }
+    },
+    {
+      "name": "ask_5",
+      "status": 200,
+      "body": {
+        "answer": "Theo mình hiểu, Explain Docker liên quan tới cách hệ thống được đóng gói và vận hành. Điểm mấu chốt là tách cấu hình ra khỏi code và giữ service ở trạng thái stateless. (Mình đang nhớ 8 lượt trao đổi trước đó.)",
+        "user_id": "evidence-13c71e185e",
+        "history_length": 8,
+        "cost_usd": 6.375e-05,
+        "tokens": {
+          "in": 217,
+          "out": 52
+        }
+      }
+    },
+    {
+      "name": "ask_6",
+      "status": 200,
+      "body": {
+        "answer": "Theo mình hiểu, Explain Docker liên quan tới cách hệ thống được đóng gói và vận hành. Điểm mấu chốt là tách cấu hình ra khỏi code và giữ service ở trạng thái stateless. (Mình đang nhớ 10 lượt trao đổi trước đó.)",
+        "user_id": "evidence-13c71e185e",
+        "history_length": 10,
+        "cost_usd": 7.215e-05,
+        "tokens": {
+          "in": 273,
+          "out": 52
+        }
+      }
+    },
+    {
+      "name": "ask_7",
+      "status": 200,
+      "body": {
+        "answer": "Theo mình hiểu, Explain Docker liên quan tới cách hệ thống được đóng gói và vận hành. Điểm mấu chốt là tách cấu hình ra khỏi code và giữ service ở trạng thái stateless. (Mình đang nhớ 12 lượt trao đổi trước đó.)",
+        "user_id": "evidence-13c71e185e",
+        "history_length": 12,
+        "cost_usd": 8.055e-05,
+        "tokens": {
+          "in": 329,
+          "out": 52
+        }
+      }
+    },
+    {
+      "name": "ask_8",
+      "status": 200,
+      "body": {
+        "answer": "Theo mình hiểu, Explain Docker liên quan tới cách hệ thống được đóng gói và vận hành. Điểm mấu chốt là tách cấu hình ra khỏi code và giữ service ở trạng thái stateless. (Mình đang nhớ 14 lượt trao đổi trước đó.)",
+        "user_id": "evidence-13c71e185e",
+        "history_length": 14,
+        "cost_usd": 8.895e-05,
+        "tokens": {
+          "in": 385,
+          "out": 52
+        }
+      }
+    },
+    {
+      "name": "ask_9",
+      "status": 200,
+      "body": {
+        "answer": "Theo mình hiểu, Explain Docker liên quan tới cách hệ thống được đóng gói và vận hành. Điểm mấu chốt là tách cấu hình ra khỏi code và giữ service ở trạng thái stateless. (Mình đang nhớ 16 lượt trao đổi trước đó.)",
+        "user_id": "evidence-13c71e185e",
+        "history_length": 16,
+        "cost_usd": 9.735e-05,
+        "tokens": {
+          "in": 441,
+          "out": 52
+        }
+      }
+    },
+    {
+      "name": "ask_10",
+      "status": 200,
+      "body": {
+        "answer": "Theo mình hiểu, Explain Docker liên quan tới cách hệ thống được đóng gói và vận hành. Điểm mấu chốt là tách cấu hình ra khỏi code và giữ service ở trạng thái stateless. (Mình đang nhớ 18 lượt trao đổi trước đó.)",
+        "user_id": "evidence-13c71e185e",
+        "history_length": 18,
+        "cost_usd": 0.0001059,
+        "tokens": {
+          "in": 498,
+          "out": 52
+        }
+      }
+    },
+    {
+      "name": "ask_11",
+      "status": 429,
+      "body": {
+        "detail": "rate limit exceeded"
+      }
+    },
+    {
+      "name": "ask_12",
+      "status": 429,
+      "body": {
+        "detail": "rate limit exceeded"
+      }
+    }
+  ]
+}

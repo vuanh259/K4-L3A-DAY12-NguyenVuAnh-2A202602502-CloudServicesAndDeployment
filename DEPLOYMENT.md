@@ -66,7 +66,19 @@ Ngày 28/09/2026, API Python chạy trực tiếp tại `http://127.0.0.1:8001`,
 
 Dữ liệu gốc: [local-python-probes.json](screenshots/local-python-probes.json).
 Log thật: [ask-log.jsonl](screenshots/ask-log.jsonl).
-Đây chưa phải kết quả Docker hay cloud, chưa đủ chứng minh CP5.
+Kết quả trên là lần kiểm tra Python trực tiếp; phép thử cloud độc lập đã được
+ghi ở bảng trước đó.
+
+## Kiểm chứng Docker local
+
+Stack agent và Redis thật đã chạy bằng Compose. Script HTTP xác nhận hai probe
+200, thiếu/sai key 401, mười lượt hỏi 200 và hai lượt tiếp theo 429.
+Xem [docker-probes.json](screenshots/docker-probes.json).
+
+Ba container dùng Redis chung đã cho history 0, 2, 4, 6, 8, 10 khi gọi luân phiên:
+[scale-results.json](screenshots/scale-results.json).
+Runtime chạy UID 10001: [docker-runtime.txt](screenshots/docker-runtime.txt).
+Thí nghiệm cache: [docker-cache.txt](screenshots/docker-cache.txt).
 
 ## Ảnh minh chứng triển khai Cloud (Render)
 

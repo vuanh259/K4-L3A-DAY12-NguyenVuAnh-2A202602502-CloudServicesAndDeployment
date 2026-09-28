@@ -1,0 +1,24 @@
+﻿ERROR tests/test_bonus_cicd.py::TestBaoMat::test_action_duoc_ghim_phien_ban
+ERROR tests/test_bonus_cicd.py::TestBadge::test_readme_co_badge - Failed: chư...
+1 failed, 12 errors in 0.08s
+
+==========================================================================
+BẢNG ĐIỂM
+==========================================================================
+  CP1 — 12-Factor Config, Health & Logging         13/13 test            15.0/15
+  CP2 — Docker: multi-stage, bảo mật image         16/16 test            15.0/15
+  CP3 — API Security: auth, rate limit, cost guard 22/22 test            20.0/20
+  CP4 — Scaling & Reliability: stateless, probe, shutdown 19/19 test            20.0/20
+  CP5 — Cloud Deployment: service chạy thật        9/9 test (4 bỏ qua)   15.0/15
+  Exercises — câu hỏi phản ánh                     10/10 câu             15.0/15
+--------------------------------------------------------------------------
+  Điểm phần bắt buộc                                                    100.0/100
+  BONUS — CI/CD với GitHub Actions                 0/13 test              +0.0/10
+--------------------------------------------------------------------------
+  TỔNG CUỐI (trần 100)                                                  100.0/100
+==========================================================================
+
+  Xuất sắc. Service của bạn đã đạt chuẩn production.
+
+Ghi chú: điểm exercises là điểm hoàn thành — chất lượng nội dung
+sẽ được giảng viên chấm lại thủ công.

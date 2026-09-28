@@ -1,0 +1,18 @@
+{
+  "redis": "stopped",
+  "health": {
+    "status": 200,
+    "body": {
+      "status": "ok",
+      "service": "day12-agent",
+      "version": "1.0.0"
+    }
+  },
+  "ready": {
+    "status": 503,
+    "body": {
+      "status": "not ready",
+      "redis": false
+    }
+  }
+}
