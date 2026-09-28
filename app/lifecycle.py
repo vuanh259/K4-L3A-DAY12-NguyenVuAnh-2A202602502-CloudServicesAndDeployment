@@ -12,6 +12,7 @@ balancer ngừng đẩy traffic mới vào → xử lý nốt request đang ch�
 from __future__ import annotations
 
 import signal
+import threading
 
 
 class Lifecycle:
@@ -44,7 +45,10 @@ class Lifecycle:
         tham số này. Không làm gì nặng ở đây (không gọi mạng, không ghi file)
         — handler chạy xen giữa bytecode.
         """
-        raise NotImplementedError("TODO (CP4): cài đặt request_shutdown")
+        self.shutting_down = True
+        previous = self._previous.get(signum)
+        if callable(previous):
+            previous(signum, frame)
 
     def install(self) -> None:
         """Đăng ký handler cho SIGTERM và SIGINT, nhớ lại handler cũ.
@@ -56,7 +60,22 @@ class Lifecycle:
 
         SIGTERM: orchestrator yêu cầu tắt. SIGINT: bạn bấm Ctrl+C.
         """
-        raise NotImplementedError("TODO (CP4): cài đặt install")
+        # Python permits signal registration only on the main thread.
+        if threading.current_thread() is not threading.main_thread():
+            return
+        for sig in (signal.SIGTERM, signal.SIGINT):
+            previous = signal.getsignal(sig)
+            if previous != self.request_shutdown:
+                self._previous[sig] = previous
+                signal.signal(sig, self.request_shutdown)
+
+    def restore(self) -> None:
+        """Restore handlers when the lifespan exits (also safe in tests)."""
+        if threading.current_thread() is threading.main_thread():
+            for sig, previous in self._previous.items():
+                if signal.getsignal(sig) == self.request_shutdown:
+                    signal.signal(sig, previous)
+            self._previous.clear()
 
 
 # Một instance dùng chung cho cả app
