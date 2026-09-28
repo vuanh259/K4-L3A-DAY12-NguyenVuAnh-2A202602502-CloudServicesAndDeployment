@@ -1,0 +1,36 @@
+# Separate stack: docker compose -p day12-scale -f docker-compose.scale.yml up -d --build --scale agent=3
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+  agent:
+    build: .
+    image: day12-agent:prod
+    environment:
+      AGENT_API_KEY: ${AGENT_API_KEY:?Set AGENT_API_KEY in .env}
+      REDIS_URL: redis://redis:6379/0
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-10}
+      MONTHLY_BUDGET_USD: ${MONTHLY_BUDGET_USD:-10.0}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      redis:
+        condition: service_healthy
+    stop_grace_period: 30s
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      agent:
+        condition: service_healthy
+volumes:
+  redis-data:
